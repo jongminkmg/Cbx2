@@ -5,7 +5,7 @@
 # =====================================================================
 
 #!/bin/bash
-#BSUB -J "job[1-12]" trimgalroe_paired
+#BSUB -J "job[1-12]" trimgalore_paired
 #BSUB -o output/J12_trimgalorePaired_%J-%I.out
 #BSUB -e output/J12_trimgalorePaired_%J-%I.err
 #BSUB -q short
