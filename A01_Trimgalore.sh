@@ -17,6 +17,9 @@ module load trimgalore/0.4.3
 module load cutadapt/1.8.1
 module load fastqc/0.11.2
 
+fastqc ../S$LSB_JOBINDEX-R1.fastq.gz
+fastqc ../S$LSB_JOBINDEX-R2.fastq.gz
+
 trim_galore --paired --quality 20 --fastqc --stringency 1 ../S$LSB_JOBINDEX-R1.fastq.gz ../S$LSB_JOBINDEX-R2.fastq.gz --output_dir ../01_trimmed
 
 
