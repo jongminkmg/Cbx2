@@ -9,7 +9,9 @@ p15.data <- Read10X(data.dir = "./")
 p15 <- CreateSeuratObject(counts = p15.data, project = "p15sg", min.cells = 3, min.features = 200)
 p15[["percent.mt"]]<-PercentageFeatureSet(p15, pattern="^MT-")
 
-# Obtained a subset with Feature cut 
+# Obtained a subset with nFeature_RNA bigger than 1000 (as done in Ernst et al., 2019)
+# https://pubmed.ncbi.nlm.nih.gov/30890697/
+# https://github.com/MarioniLab/Spermatogenesis2018/blob/master/Preprocessing/10X_scRNAseq/Filtering.Rmd
 # Note, already done Count (or UMI#) cut by Cellranger
 p15sub <- subset(p15, subset = nFeature_RNA > 1000)
 
