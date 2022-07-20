@@ -1,0 +1,21 @@
+# ========================================
+# Deeptools make bedgraph and bigwig files
+# ========================================
+
+#!/bin/bash
+#BSUB -J "job[1-12]" bamCoverage
+#BSUB -o output/bamCov_-%J-%I.out
+#BSUB -e output/bamCov_-%J-%I.err
+#BSUB -q medium
+#BSUB -n 4
+#BSUB -R rusage[mem=8000]
+#BSUB -u jongminkim@molbio.mgh.harvard.edu
+
+module load deeptools/2.2.4
+
+bamCoverage -b ../01_trimmed/ST$LSB_JOBINDEX-q10f2SrtPcd.bam -o ../01_trimmed/ST$LSB_JOBINDEX-q10f2SrtPcd.rpkm.bw -of bigwig \
+  --binSize 10 \
+  --normalizeUsingRPKM
+
+# unlike what is written in the deeptools webpage, --normalizeUsing RPKM is not for this version. It should be --normalizeUsingRPKM
+# --of: outFileFormat. either "bigwig" or "bedgraph".
