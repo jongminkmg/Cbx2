@@ -1,0 +1,29 @@
+# ========================================
+# Find peaks using MACS2
+# ========================================
+
+#!/bin/bash
+#BSUB -J MACS2
+#BSUB -o output/MACS2_1_-%J-%I.out
+#BSUB -e output/MACS2_1_-%J-%I.err
+#BSUB -q medium
+#BSUB -n 4
+#BSUB -R rusage[mem=8000]
+#BSUB -u jongminkim@molbio.mgh.harvard.edu
+
+
+module load python/2.7.3
+module load macs2/2.1
+
+
+# IgG(S01)-CBX2(JK856)(S02)
+macs2 callpeak -t ../01_trimmed/ST2-q10f2SrtPcd.bam -c ../01_trimmed/ST1-q10f2SrtPcd.bam -f BAM -g mm -n MACS_broad_S2 -B --outdir ../03_MACS --broad
+
+# IgG(S01)-H3K27me3(S03)
+macs2 callpeak -t ../01_trimmed/ST3-q10f2SrtPcd.bam -c ../01_trimmed/ST1-q10f2SrtPcd.bam -f BAM -g mm -n MACS_broad_S3 -B --outdir ../03_MACS --broad
+
+# -t: treatment
+# -c: control
+# -f: fileformat
+# -n: name string of the experiment
+# -B: save beadgraph file
