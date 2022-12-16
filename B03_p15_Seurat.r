@@ -53,3 +53,22 @@ p15sg <- RunUMAP(p15sg, dims=1:10)
 # Plot to check
 DimPlot(p15sg, reduction = "umap", label = TRUE)
 FeaturePlot(p15sg, features=c("Stra8"))
+
+
+## Get expression of a group of genes (PcG targets)
+Cbx2Targets <- read.table ("./CBX2-target_708_Unique657.txt", header=FALSE)
+Cbx2TargetsList = as.list(Cbx2Targets)
+
+p15sg <- AddModuleScore (object = p15sg, features = Cbx2TargetsList, name = "Cbx2_Target")
+FeaturePlot (p15sg, features = "Cbx2_Target1" )
+
+my_levels <- c(6,4,3,0,1,5,2)
+p15sg@active.ident <- factor(x = p15sg@active.ident, levels = my_levels)
+Idents(p15sg) <- factor(Idents(p15sg), levels= my_levels)
+
+VlnPlot(p15sg, features = 'Cbx2_Target1')
+VlnPlot(p15sg, features = c('Cbx2'))
+
+write.csv (p15sg@meta.data$Cbx2_Target1, "./ModuleScoreCbx2_Target1.csv")
+write.csv (p15sg@active.ident, "./ModuleScoreActiveIdent.csv")
+
