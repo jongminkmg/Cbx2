@@ -15,15 +15,16 @@
 
 module load subread/1.5.0 
 
-# Forgot if I need to use "-s 1" or "-s 2" for my RNA-seq prep. Use output w/ 'reasonable' counts...
+# SMARTer Stranded Total RNA-Seq Kit v2 -Pico (Takara), Cbx2 23KRA - use strand '2'
+# SMART-Seq mRNA LP (Takara), Cbx2 iKO - use strand '0'
 
 # Per gene basis counts
-featureCounts -T 4 -p -s 1 -t exon -g gene_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FcountS1.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
+featureCounts -T 4 -p -s 0 -t exon -g gene_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FcountS0.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
 
 featureCounts -T 4 -p -s 2 -t exon -g gene_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FcountS2.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
 
 # Per transcript basis counts
-featureCounts -T 4 -p -s 1 -t exon -g transcript_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FTxcountS1.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
+featureCounts -T 4 -p -s 0 -t exon -g transcript_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FTxcountS0.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
 
 featureCounts -T 4 -p -s 2 -t exon -g transcript_id -a ../../../00_genome/mm10_refFlat_noChr.gtf -o ../02_sam/ST$LSB_JOBINDEX-FTxcountS2.txt ../02_sam/ST$LSB_JOBINDEX-q10f2Srt.bam
 
