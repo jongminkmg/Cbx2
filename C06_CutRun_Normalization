@@ -1,0 +1,18 @@
+## * Normalization rationale:
+## 1) Not use normalizing to the 'spike-in'. This assumes I have same cell numbers. 
+##    However, using the exact same cell numbers across samples is not easy when I work with small cell numbers, especially after sorting. 
+## 2) Total read number normalization is not sufficient, if signal-to-noise is different between different samples. 
+##    e.g.) even with the same starting material, if exp A worked better than the exp B, then exp A will show many artificial 'stronger' peaks.
+## 3) Peak composition difference need to be accounted for.
+##    e.g.) Let's assume promoter A accounts for 50% all reads. If promoter A binding is gone, that will inflate up all the other promoter sigmal with total read norm.
+##
+##* What I will do?
+## 1) Obtain promoter signal of all genes
+## 2) Obtain scaling factors by EdgeR's TMM normalization 
+## 3) Divide with the 'scaling factors'
+##
+## Remember, this assumes
+## 1) intensity distribution at promoters across different conditions is same
+## 2) What I am meausring is how enrichment of my factor X across promoters is relatively ditributed differently in all promoters.
+##    Thus, cannot measure a 'global' decline in intensity. 
+
