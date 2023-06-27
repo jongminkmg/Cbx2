@@ -14,5 +14,5 @@
 ## Remember, this assumes
 ## 1) intensity distribution at promoters across different conditions is same
 ## 2) What I am meausring is how enrichment of my factor X across promoters is relatively ditributed differently in all promoters.
-##    Thus, cannot measure a 'global' decline in intensity. 
+##    Thus, cannot measure a 'global' decline in intensity.   
 
