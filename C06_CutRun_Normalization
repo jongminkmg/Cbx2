@@ -1,18 +1,72 @@
 ## * Normalization rationale:
-## 1) Not use normalizing to the 'spike-in'. This assumes I have same cell numbers. 
+## 1) Not use normalizing to the 'spike-in'. This assumes I have the same cell numbers across comparing samples. 
 ##    However, using the exact same cell numbers across samples is not easy when I work with small cell numbers, especially after sorting. 
 ## 2) Total read number normalization is not sufficient, if signal-to-noise is different between different samples. 
-##    e.g.) even with the same starting material, if exp A worked better than the exp B, then exp A will show many artificial 'stronger' peaks.
-## 3) Peak composition difference need to be accounted for.
-##    e.g.) Let's assume promoter A accounts for 50% all reads. If promoter A binding is gone, that will inflate up all the other promoter sigmal with total read norm.
+##    e.g.) even with the same starting material, if exp A 'worked better' than exp B, then exp A will show many artificial 'stronger' peaks.
+## 3) Peak composition differences need to be accounted for.
+##    e.g.) Let's assume promoter A accounts for 50% of all reads. If promoter A binding is gone, that will inflate up all the other promoter signal with total read norm.
 ##
-##* What I will do?
+##* What will I do?
 ## 1) Obtain promoter signal of all genes
 ## 2) Obtain scaling factors by EdgeR's TMM normalization 
 ## 3) Divide with the 'scaling factors'
 ##
-## Remember, this assumes
-## 1) intensity distribution at promoters across different conditions is same
-## 2) What I am meausring is how enrichment of my factor X across promoters is relatively ditributed differently in all promoters.
-##    Thus, cannot measure a 'global' decline in intensity.   
+## * Remember, this assumes
+## 1) intensity distribution at promoters across different conditions is the same
+## 2) What I am measuring is how the enrichment of my factor X across promoters is relatively distributed differently in all promoters.
+##    Thus, it cannot measure a 'global' increase or decrease in intensity.   
+##
+##
+##
+##
+## ====Shell scrpit: Obtain promoter +-5kb associated signals using multiBigwigSummary====
+
+
+#!/bin/bash
+#BSUB -J "job[1]" multibwsummary
+#BSUB -o output/multibwsummary-%J-%I.out
+#BSUB -e output/multibwsummary-%J-%I.err
+#BSUB -n 1
+#BSUB -R rusage[mem=8000]
+#BSUB -u jongminkim@molbio.mgh.harvard.edu
+
+module load deeptools/3.1.2
+
+multiBigwigSummary BED-file -b ../01_trimmed/ST1-q10f2SrtPcd.rpkm.bw  ../01_trimmed/ST2-q10f2SrtPcd.rpkm.bw  -o ./J20_MbwS_AllTSSOut5kb --outRawCounts ./J20_MbwS_AllTSS5kbuniqV4.txt --BED ./mm10_refFlat_TSS5kb_uniqV4.bed
+
+
+
+## ====R: Obtain Library size and normalization factor using EdgeR====
+
+library (edgeR)
+library (limma)
+library (RColorBrewer)
+library (mixOmics)
+library (HTSFilter)
+
+# Import data (below example)
+# GeneID	ST5	ST6	ST7	STx
+# Wdr13		370	431	453	504
+# Npnt		599	582	655	731
+# Twnk		901	969	1000	1165
+# Gene X	.	.	.	.
+
+rawCountTable <- read.table ("EdgeR-RINB1B-KRA.txt", header=TRUE, sep="\t", row.names = 1)
+
+# Create a DGEList data object-
+dgeFull <- DGEList (rawCountTable)
+
+# Remove genes with zero counts for all samples
+dgeFull <- DGEList(dgeFull$counts[apply(dgeFull$counts, 1, sum)!=0, ], group=dgeFull$samples$group)
+# (e.g. 24984 elements to 21404 elements)
+
+# Estimate normalization factor 
+# (Trimmed Mean of M-values (TMM): 
+# assuming the majority of 'housekeeping' genes have the same expression levels across conditions)
+dgeFull <- calcNormFactors(dgeFull, method="TMM")
+
+# Apply obtained library size and normalization factor values to the original counts
+# TMM counts are:
+# Count / (library size * normalization factor)
+
 
